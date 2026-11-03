@@ -22,6 +22,16 @@ class DashboardTest extends TestCase
         $this->actingAs($user);
 
         $response = $this->get(route('dashboard'));
-        $response->assertOk();
+        $response->assertOk()
+            ->assertSee($user->name);
+    }
+
+    public function test_unverified_users_are_redirected_to_email_verification(): void
+    {
+        $user = User::factory()->unverified()->create();
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertRedirect(route('verification.notice'));
     }
 }

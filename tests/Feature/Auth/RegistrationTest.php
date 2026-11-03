@@ -37,5 +37,29 @@ class RegistrationTest extends TestCase
             ->assertRedirect(route('dashboard', absolute: false));
 
         $this->assertAuthenticated();
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'role' => null,
+            'status' => 'active',
+        ]);
+    }
+
+    public function test_registration_cannot_assign_an_admin_role(): void
+    {
+        $this->post(route('register.store'), [
+            'name' => 'John Doe',
+            'email' => 'test@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'role' => 'admin',
+            'status' => 'active',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'role' => null,
+            'status' => 'active',
+        ]);
     }
 }

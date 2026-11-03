@@ -9,5 +9,9 @@ parameters:
         - config/
         - database/
         - routes/
+    
+    # Blade/SFC milik modul bukan kelas PHP murni (dianalisis via test, bukan PHPStan).
+    excludePaths:
+        - app/Modules/*/resources/*
 
     level: 7
